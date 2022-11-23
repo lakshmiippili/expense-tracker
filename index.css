@@ -1,0 +1,13 @@
+form{
+    width:250px;
+    text-align:left;
+    width:100%;
+    padding:5px;
+    margin:10px 0;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    border-radius:10px;
+}
+
+input[type=submit]{
+    background-color:rgb(237, 173, 100);
+}

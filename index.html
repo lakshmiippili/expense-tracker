@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<title>Expense Tracker</title>
+<h1> Expense Tracker</h1>
+<head>
+    <link rel="stylesheet" href="index.css">
+  </head>
+<body>
+    <form id="'myform">
+        Amount: <input type="text" id="amount">  
+        Description: <input type="text" id="description">
+        Catergory: <select name="category" id="category">
+        <option value="entertainment">entertainment</option>
+        <option value="food"> food</option>
+        <option value="electricity"> electricity</option>
+        <option value="vehicle"> vehicle</option>
+        <option value="medical">medicle</option>
+    </select>
+    <input type="submit" id="submit" value="Add Expense"/>
+    </form>
+    <ul id="expenses"></ul>
+    
+    <script src="index.js"></script>
+</body>
