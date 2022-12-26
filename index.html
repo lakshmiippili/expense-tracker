@@ -2,22 +2,111 @@
 <title>Expense Tracker</title>
 <h1> Expense Tracker</h1>
 <head>
-    <link rel="stylesheet" href="index.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" 
+    crossorigin="anonymous">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" 
+    crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="styles.css">
   </head>
 <body>
-    <form id="'myform">
-        Amount: <input type="text" id="amount">  
-        Description: <input type="text" id="description">
-        Catergory: <select name="category" id="category">
-        <option value="entertainment">entertainment</option>
-        <option value="food"> food</option>
-        <option value="electricity"> electricity</option>
-        <option value="vehicle"> vehicle</option>
-        <option value="medical">medicle</option>
-    </select>
-    <input type="submit" id="submit" value="Add Expense"/>
-    </form>
-    <ul id="expenses"></ul>
+    <div class="container">
+        <div class="d-flex justify-content-lg-between">
+        <div class="border border-3 p-2">
+        <form id="'myform" onsubmit="saveToCrudCrud(event)" novalidate>
+            <label for="amount" class="form-label">Amount: </label>
+            <div class="input-group">
+                <div class="input-group-text">Rs</div>
+                <input type="text" class="form-control" id="amount" placeholder="Enter Amount" required>
+            </div>
+            <label for="description" class="form-label">Description: </label>
+            <input type="text" class="form-control" id="description" placeholder="Enter Description" required>
+            <label for="category" class="form-label">Catergory: </label>
+            <select name="category" class="form-select" required id="category">
+                <option value="" selected disabled>Select Catergory</option>
+                <option value="entertainment">entertainment</option>
+                <option value="food"> food</option>
+                <option value="electricity"> electricity</option>
+                <option value="vehicle"> vehicle</option>
+                <option value="medical">medicle</option>
+            </select>
+            <input type="submit" class="btn btn-primary m-2" id="submit" value="Add Expense"/>
+        </form>
+        <ul id="expenses"></ul> 
+    </div>
+    </div>
+        
     
-    <script src="index.js"></script>
-</body>
+         
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.2.0/axios.min.js"></script>
+        <script>
+            const form=document.querySelector("form")
+            form.addEventListener('submit',e=>{
+                if(!form.checkValidity()){
+                    e.preventDefault()
+                }
+                form.classList.add('was-validated')    
+            })
+            function saveToCrudCrud(event) {
+                event.preventDefault();
+                var amount=document.getElementById('amount').value
+                var description=document.getElementById('description').value
+                var category=document.getElementById('category').value
+                var obj={
+                    amount,
+                    description,
+                    category
+                }   
+                axios.post("https://crudcrud.com/api/7db232a8a01c477aa279aa775e32f688/expenseData",obj)
+                .then((res)=>{console.log(res)})
+                .catch((err)=>{console.log(err)})
+            }
+
+            window.addEventListener('DOMContentLoaded', (event) => {
+                axios.get("https://crudcrud.com/api/7db232a8a01c477aa279aa775e32f688/expenseData")
+                .then((response)=>{
+                    console.log(response)
+                    for(var i=0; i< response.length ; i++){
+                        showListofExpenses(response[i])
+                    }
+                })
+                .catch((err)=>{console.log(err)})
+                
+            })
+
+            function showListofExpenses(detail){
+                const parentNode = document.getElementById('expenses');
+                const createNewDetailHtml = `<li id='${detail.amount}'>${detail.amount} : ${detail.description} - ${detail.category} 
+                                                <button onclick=editExpense('${detail.amount}')>Edit</button>
+                                                <button onclick=deleteExpense('${detail.amount},${detail.description}')>Delete</button>
+                                                
+                                            </li>
+                                            `
+                
+                parentNode.innerHTML +=  createNewDetailHtml;
+            }
+
+            function editExpense(detail){
+                removeExpenseFromScreen(detail)
+                axios.put("https://crudcrud.com/api/7db232a8a01c477aa279aa775e32f688/expenseData/63a9298d32f90d03e8f0d974",{
+                    amount:'2500',description:'groceries',category:'food'
+                }).then((response)=>{console.log(response)
+                    })
+                .catch((err)=>{console.log(err)})
+                
+            }
+            function deleteExpense(detail) {   
+                axios.delete("https://crudcrud.com/api/7db232a8a01c477aa279aa775e32f688/expenseData/63a9414c32f90d03e8f0d9b3")
+                removeExpenseFromScreen(detail)
+            }
+
+            function removeExpenseFromScreen(detail){
+                const parentNode = document.getElementById('expenses');
+                const elem = document.getElementById(detail)
+                parentNode.removeChild(elem);
+            }
+        </script>
+    </div>    
+</body> 
